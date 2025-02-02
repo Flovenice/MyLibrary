@@ -11,7 +11,6 @@ const inputTitle = document.getElementById('book-title-input');
 const inputAuthor = document.getElementById('book-author-input');
 const inputPages = document.getElementById('book-pages-input');
 
-
 let isModalOpen = false;
 
 addBookBtn.addEventListener('click', (e) => {
