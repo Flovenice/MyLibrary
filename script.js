@@ -28,6 +28,9 @@ submitBtn.addEventListener('click', (e) => {
     addBookToLibrary(inputTitle.value, inputAuthor.value, inputPages.value);
     modal.close();
     isModalOpen = false;
+    inputTitle.value = "";
+    inputAuthor.value = "";
+    inputPages.value = "";
 })
 
 class Book {
