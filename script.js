@@ -17,7 +17,6 @@ let isModalOpen = false;
 addBookBtn.addEventListener('click', (e) => {
     modal.showModal();
     isModalOpen = true;
-    e.stopPropagation();
 });
 
 closeBtn.addEventListener('click', (e) => {
@@ -28,55 +27,68 @@ closeBtn.addEventListener('click', (e) => {
 submitBtn.addEventListener('click', (e) => {
     e.preventDefault();
     addBookToLibrary(inputTitle.value, inputAuthor.value, inputPages.value);
-    drawBookCards(myLibrary);
     modal.close();
     isModalOpen = false;
 })
 
-function drawBookCards(myLibrary) {
-    myLibrary.forEach(book => {
-        const bookCard = document.createElement('div');
-        bookCard.classList.add('book-card');
-        bookCardsContainer.append(bookCard);
-        const bookTitle = document.createElement('h1');
-        bookTitle.textContent = book.title;
-        bookTitle.classList.add('book-title');
-        bookCard.append(bookTitle);
-        const bookCardContent = document.createElement('div');
-        bookCard.append(bookCardContent);
-        const bookCardList = document.createElement('ul');
-        bookCardContent.append(bookCardList);
-        const bookCardListAuthor = document.createElement('li');
-        bookCardListAuthor.textContent = `Author: ${book.author}`;
-        bookCardListAuthor.classList.add('book-author')
-        const bookCardListPages = document.createElement('li');
-        bookCardListPages.textContent = `Pages: ${book.pages}`;
-        bookCardListPages.classList.add('book-pages')
-        const bookCardListRead = document.createElement('li');
-        bookCardListRead.textContent = `Readed: ${book.read ? 'Yes' : 'No'}`;
-        bookCardListRead.classList.add('book-read');
-        bookCardList.append(bookCardListAuthor);
-        bookCardList.append(bookCardListPages);
-        bookCardList.append(bookCardListRead);
-        const readButton = document.createElement('button');
-        readButton.textContent = 'I Read This!';
-        readButton.classList.add('read-btn');
-        bookCard.append(readButton);
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove Book';
-        removeButton.classList.add('remove-btn');
-        bookCard.append(removeButton);
-    });
-}
-
-function Book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
+class Book {
+    constructor(title, author, pages, read) {
+        this.id = Date.now();
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
 }
 
 function addBookToLibrary(title, author, pages){
     const book = new Book(title, author, pages, false);
     myLibrary.push(book);
+    const bookCard = document.createElement('div');
+    bookCard.classList.add('book-card');
+    bookCardsContainer.append(bookCard);
+    bookCard.setAttribute('data-id', `${Date.now()}`);
+
+    const bookTitle = document.createElement('h1');
+    bookTitle.textContent = book.title;
+    bookTitle.classList.add('book-title');
+    bookCard.append(bookTitle);
+
+    const bookCardContent = document.createElement('div');
+    bookCard.append(bookCardContent);
+
+    const bookCardList = document.createElement('ul');
+    bookCardContent.append(bookCardList);
+
+    for (let i = 0; i <= 2; i++) {
+        const bookCardListElement = document.createElement('li');
+        bookCardListElement.classList.add('book-list');
+        switch (i) {
+            case 0: bookCardListElement.textContent = `Author: ${book.author}`; 
+            break;
+            case 1: bookCardListElement.textContent = `Pages: ${book.pages}`;
+            break;
+            case 2: bookCardListElement.textContent = `Readed: ${book.read ? 'Yes' : 'No'}`;
+            break;
+        }
+        bookCardList.append(bookCardListElement);
+    }
+
+    const readButton = document.createElement('button');
+    readButton.textContent = 'I Read This!';
+    readButton.classList.add('read-btn');
+    bookCard.append(readButton);
+
+    readButton.addEventListener('click', (e) => {
+        bookCardList.lastChild.textContent = 'Readed: Yes';
+    })
+
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Remove Book';
+    removeButton.classList.add('remove-btn');
+    bookCard.append(removeButton);
+
+    removeButton.addEventListener('click', (e) => {
+        bookCard.remove();
+    })
 }
